@@ -1,8 +1,7 @@
 import datetime
 import requests
-from gql.transport.requests 
-import RequestsHTTPTransport 
 from gql import gql,client
+from gql.transport.requests import RequestsHTTPTransport, Client
 LOG_FILE = "/tmp/crm_heartbeat_log.txt"
 GRAPHQL_ENDPOINT = "http://localhost:8000/graphql"
 
