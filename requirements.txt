@@ -1,1 +1,5 @@
 django-crontab==0.7.1
+celery
+redis
+django-celery-beat
+
