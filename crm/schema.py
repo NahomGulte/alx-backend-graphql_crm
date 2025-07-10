@@ -1,5 +1,4 @@
 import re
-
 import graphene
 from graphene import Decimal
 from graphene_django import DjangoObjectType
@@ -138,11 +137,34 @@ class CreateOrder(graphene.Mutation):
         return CreateOrder(order=order)
 
 
+# ✅ NEW: UpdateLowStockProducts Mutation
+class UpdateLowStockProducts(graphene.Mutation):
+    success = graphene.String()
+    updated_products = graphene.List(ProductType)
+
+    def mutate(self, info):
+        low_stock_products = Product.objects.filter(stock__lt=10)
+        updated = []
+
+        for product in low_stock_products:
+            product.stock += 10
+            product.save()
+            updated.append(product)
+
+        return UpdateLowStockProducts(
+            success=f"{len(updated)} products updated successfully.",
+            updated_products=updated
+        )
+
+
 class Mutation(graphene.ObjectType):
     create_customer = CreateCustomer.Field()
     bulk_create_customers = BulkCreateCustomers.Field()
     create_product = CreateProduct.Field()
     create_order = CreateOrder.Field()
+
+    # ✅ Add the mutation to the schema
+    update_low_stock_products = UpdateLowStockProducts.Field()
 
 
 class Query(graphene.ObjectType):
@@ -158,6 +180,4 @@ class Query(graphene.ObjectType):
         qs = Product.objects.all()
         return qs.order_by(order_by) if order_by else qs
 
-    def resolve_all_orders(root, info, order_by=None, **kwargs):
-        qs = Order.objects.all()
-        return qs.order_by(order_by) if order_by else qs
+    def resolve_all_orders(root, info, order_by=Non_
