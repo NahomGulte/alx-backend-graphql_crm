@@ -180,4 +180,6 @@ class Query(graphene.ObjectType):
         qs = Product.objects.all()
         return qs.order_by(order_by) if order_by else qs
 
-    def resolve_all_orders(root, info, order_by=Non_
+    def resolve_all_orders(root, info, order_by=None, **kwargs):
+        qs = Order.objects.all()
+        return qs.order_by(order_by) if order_by else qs
