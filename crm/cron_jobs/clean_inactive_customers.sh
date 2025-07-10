@@ -1,9 +1,18 @@
 #!/bin/bash
 
-# Activate your virtual environment if needed
-# source /path/to/venv/bin/activate
+# Determine the directory of the script regardless of how it is called
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# Run the Django shell command to delete inactive customers and capture the count
+# Assume manage.py is located two levels above this script directory
+project_root="$(cd "$script_dir/../.." && pwd)"
+
+# Change to project root
+cd "$project_root" || {
+  echo "Failed to change directory to project root: $project_root"
+  exit 1
+}
+
+# Run the Django shell command and capture number of deleted customers
 deleted_count=$(python3 manage.py shell -c "
 from django.utils.timezone import now
 from datetime import timedelta
@@ -15,4 +24,4 @@ print(deleted)
 ")
 
 # Log with timestamp
-echo \"\$(date '+%Y-%m-%d %H:%M:%S') Deleted \$deleted_count customers due to inactivity\" >> /tmp/customer_cleanup_log.txt
+echo "$(date '+%Y-%m-%d %H:%M:%S') Deleted $deleted_count customers due to inactivity" >> /tmp/customer_cleanup_log.txt
