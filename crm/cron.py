@@ -4,7 +4,7 @@ import requests
 LOG_FILE = "/tmp/crm_heartbeat_log.txt"
 GRAPHQL_ENDPOINT = "http://localhost:8000/graphql"
 
-def log_crm_heartbeat() -> None:
+def log_crm_heartbeat():
     """
     Logs a heartbeat message with timestamp to a log file every 5 minutes.
     Optionally queries the GraphQL hello field to verify endpoint responsiveness.
